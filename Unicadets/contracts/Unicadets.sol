@@ -1,13 +1,40 @@
 // SPDX-License-Identifier: GPL-3.0
 
+import "erc721a/contracts/ERC721A.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+
+
 pragma solidity >=0.7.0 <0.9.0;
 
-contract Unicadets {
-        
-    address payable owner;
+contract Unicadets is ERC721A, Ownable {
+    
+    uint public constant PRICE_TIER_1 = 0 ether;
+    uint public constant PRICE_TIER_2 = .1 ether;
+    uint public constant PRICE_TIER_3 = .15 ether;
+    uint public constant MAX_SUPPLY = 3000;
 
-    constructor() {
-        owner = payable(msg.sender);
+    constructor() ERC721A("Unicadets", "UNICDT") {}
+
+    function mint(uint256 _quantity) external payable {
+        require(_quantity > 0, "You can't mint nothing!");
+        require(_quantity <= 5, "Too many minted at once!");
+        uint minted = totalSupply();
+        require(minted + _quantity <= MAX_SUPPLY, "Not enough remaining tokens!");
+        uint price = _getPrice();
+        require(msg.value >= price * _quantity, "Insufficient funding!");
+        _safeMint(msg.sender, _quantity);
+    }
+    
+    function _getPrice() internal view returns(uint256) {
+        uint currentSupply = totalSupply();
+        if (currentSupply <= 1000)
+            return PRICE_TIER_1;
+        else if (currentSupply <= 2000)
+            return PRICE_TIER_2;
+        else if (currentSupply <= 3000)
+            return PRICE_TIER_3;
+        return PRICE_TIER_2;
     }
 
     function draw(uint256 seed) public pure returns(string memory) {
@@ -65,11 +92,6 @@ contract Unicadets {
             ));
     }
 
-    
-    
-    
-    
-    
 
     uint private constant HEAD_COUNT = 18;
     function _top(uint256 rand) internal pure returns (string memory) {
@@ -98,17 +120,19 @@ contract Unicadets {
         return heads[rand % HEAD_COUNT];
     }
 
-    uint private constant ARM_COUNT = 3;
+    uint private constant ARM_COUNT = 4;
     function _arms(uint256 rand) internal pure returns (string memory, string memory) {
 
         string[ARM_COUNT] memory left_arms = [
             "~",
             "-",
+            "=",
             unicode"⌐"
         ];
         string[ARM_COUNT] memory right_arms = [
             "~",
             "-",
+            "=",
             unicode"¬"
         ];
 
@@ -172,6 +196,12 @@ contract Unicadets {
             
         ];
         return legs[rand % LEG_COUNT];
+    }
+
+    function withdraw() public onlyOwner {
+        uint balance = address(this).balance;
+
+        payable(msg.sender).transfer(balance);
     }
 
 }
