@@ -1,40 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
 
-import "erc721a/contracts/ERC721A.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-
-
-
 pragma solidity >=0.7.0 <0.9.0;
 
-contract Unicadets is ERC721A, Ownable {
-    
-    uint public constant PRICE_TIER_1 = 0 ether;
-    uint public constant PRICE_TIER_2 = .1 ether;
-    uint public constant PRICE_TIER_3 = .15 ether;
-    uint public constant MAX_SUPPLY = 3000;
+contract Unicadets {
+        
+    address payable owner;
 
-    constructor() ERC721A("Unicadets", "UNICDT") {}
-
-    function mint(uint256 _quantity) external payable {
-        require(_quantity > 0, "You can't mint nothing!");
-        require(_quantity <= 5, "Too many minted at once!");
-        uint minted = totalSupply();
-        require(minted + _quantity <= MAX_SUPPLY, "Not enough remaining tokens!");
-        uint price = _getPrice();
-        require(msg.value >= price * _quantity, "Insufficient funding!");
-        _safeMint(msg.sender, _quantity);
-    }
-    
-    function _getPrice() internal view returns(uint256) {
-        uint currentSupply = totalSupply();
-        if (currentSupply <= 1000)
-            return PRICE_TIER_1;
-        else if (currentSupply <= 2000)
-            return PRICE_TIER_2;
-        else if (currentSupply <= 3000)
-            return PRICE_TIER_3;
-        return PRICE_TIER_2;
+    constructor() {
+        owner = payable(msg.sender);
     }
 
     function draw(uint256 seed) public pure returns(string memory) {
@@ -57,26 +30,38 @@ contract Unicadets is ERC721A, Ownable {
         string memory leg = _legs(seed);
         string memory weapon = _weapon(seed);
         uint weapon_on_right = seed % 2;
-        string memory weapon_x = '15%';
-        if (weapon_on_right == 1)
-            weapon_x = '75%';
+        string memory weapon_x;
         
-        string memory svg_string = '<svg viewBox="0 0 48 48" width="256px" height="256px"  xmlns="http://www.w3.org/2000/svg">';
-        top = string(abi.encodePacked('<text x="38%" y="33%" font-size="80%">', top, '</text>'));
-        left_arm = string(abi.encodePacked('<text x="24%" y="60%" font-size="90%">', left_arm, '</text>'));
-        left_body = string(abi.encodePacked('<text x="38%" y="60%" font-size="90%">', left_body, '</text>'));
-        right_body = string(abi.encodePacked('<text x="50%" y="60%" font-size="90%">', right_body,'</text>'));
-        right_arm = string(abi.encodePacked('<text x="60%" y="60%" font-size="90%">', right_arm, '</text>'));
+        if (weapon_on_right == 1)
+        {
+            weapon_x = '75%';
+            left_arm = string(abi.encodePacked('<text x="85" y="128" font-size="60px" text-anchor="middle" dominant-baseline="central" transform="rotate(-45, 100, 145)">', left_arm, '</text>'));
+            right_arm = string(abi.encodePacked('<text x="60%" y="60%" font-size="60px">', right_arm, '</text>'));
+        } else if (weapon_on_right == 0)
+        {
+            weapon_x = '15%';
+            left_arm = string(abi.encodePacked('<text x="24%" y="60%" font-size="60px">', left_arm, '</text>'));
+            right_arm = string(abi.encodePacked('<text x="172" y="128" font-size="60px" text-anchor="middle" dominant-baseline="central" transform="rotate(45, 158, 128)">', right_arm, '</text>'));
+        }
+            
+
+            
+        
+        string memory svg_string = '<svg width="256px" height="256px"  xmlns="http://www.w3.org/2000/svg">';
+        top = string(abi.encodePacked('<text x="38%" y="33%" font-size="50px">', top, '</text>'));
+        left_body = string(abi.encodePacked('<text x="38%" y="60%" font-size="60px">', left_body, '</text>'));
+        right_body = string(abi.encodePacked('<text x="50%" y="60%" font-size="60px">', right_body,'</text>'));
         weapon = string(abi.encodePacked('<text x="', 
                                                 weapon_x, 
-                                                '" y="60%" font-size="60%">', 
+                                                '" y="60%" font-size="60px">', 
                                                 weapon, 
                                                 '</text>'));
+                                                
         string memory legs = string(abi.encodePacked(
-                                                '<text x="40%" y="85%" font-size="80%">',
+                                                '<text x="40%" y="80%" font-size="50px">',
                                                 leg,
                                                 '</text>',
-                                                '<text x="52%" y="85%" font-size="80%">',
+                                                '<text x="52%" y="80%" font-size="50px">',
                                                 leg,
                                                 '</text></svg>'));
         
@@ -92,8 +77,13 @@ contract Unicadets is ERC721A, Ownable {
             ));
     }
 
+    
+    
+    
+    
+    
 
-    uint private constant HEAD_COUNT = 18;
+    uint private constant HEAD_COUNT = 21;
     function _top(uint256 rand) internal pure returns (string memory) {
 
         string[HEAD_COUNT] memory heads = [
@@ -114,26 +104,36 @@ contract Unicadets is ERC721A, Ownable {
             unicode"⭖",
             unicode"Ⳝ",
             unicode"✹",
-            unicode"☬"
+            unicode"☳",
+            unicode"⍨",
+            unicode"ⱒ",
+            unicode"⚍"
         ];
 
         return heads[rand % HEAD_COUNT];
     }
 
-    uint private constant ARM_COUNT = 4;
+    uint private constant ARM_COUNT = 7;
     function _arms(uint256 rand) internal pure returns (string memory, string memory) {
 
         string[ARM_COUNT] memory left_arms = [
             "~",
             "-",
-            "=",
-            unicode"⌐"
+            unicode"⌐",
+            unicode"↼",
+            unicode"↜",
+            unicode"⹀",
+            "="
+            
         ];
         string[ARM_COUNT] memory right_arms = [
             "~",
             "-",
-            "=",
-            unicode"¬"
+            unicode"¬",
+            unicode"⇀",
+            unicode"↝",
+            unicode"⹀",
+            "="
         ];
 
         uint arm_pair = rand % ARM_COUNT;
@@ -166,42 +166,49 @@ contract Unicadets is ERC721A, Ownable {
         return (left_torsos[torso_int], right_torsos[torso_int]);
     }
 
-    uint private constant WEAPON_COUNT = 5;
+    uint private constant WEAPON_COUNT = 12;
     function _weapon(uint rand) internal pure returns(string memory) {
 
         string[WEAPON_COUNT] memory weapons = [
             unicode"Ⳕ",
             unicode"ﴽ",
-            unicode"✧",
             unicode"⟆",
-            unicode"℥"
+            unicode"℥",
+            unicode"⨛",
+            unicode"⌈",
+            unicode"⼬",
+            unicode"⚸",
+            unicode"Ⲋ",
+            unicode"⨙",
+            unicode"⨔",
+            unicode"⍤"
         ];
 
         return weapons[rand % WEAPON_COUNT];
     }
     
-    uint private constant LEG_COUNT = 10;
+    uint private constant LEG_COUNT = 15;
     function _legs(uint256 rand) internal pure returns (string memory) {
         string[LEG_COUNT] memory legs = [
             unicode"ɺ",
             unicode"ʁ",
             unicode"⦣",
             unicode"ι",
-            unicode"♢",
             unicode"›",
             unicode"Ⅼ",
             unicode"ⲧ",
+            unicode"❬",
+            unicode"⸝",
+            unicode"❠",
+            unicode"ⱹ",
+            unicode"ⱼ",
+            unicode"⸥",
+            "i"
             ",",
             "v"
             
         ];
         return legs[rand % LEG_COUNT];
-    }
-
-    function withdraw() public onlyOwner {
-        uint balance = address(this).balance;
-
-        payable(msg.sender).transfer(balance);
     }
 
 }

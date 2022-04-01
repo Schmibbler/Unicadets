@@ -3,6 +3,7 @@ myproject
 
 /node_modules
 /.idea
+/svgs
 *.tsbuildinfo
 
 # VS Code workspace config
