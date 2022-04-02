@@ -7,10 +7,9 @@ async function main() {
     console.log("My Contract deployed to:", myContract.address);
     for (let i = 0; i < 30; i++)
     {
-      svg_text = await myContract.renderSVG(Math.ceil(Math.random() * 10000))
+      svg_text = await myContract._renderSVG(Math.ceil(Math.random() * 10000))
       fs.writeFileSync(`./svgs/${i}.svg`, svg_text)
     }
-
   }
   
   main()
