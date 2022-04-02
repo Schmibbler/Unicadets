@@ -1,3 +1,4 @@
+/*
 const { Contract } = require("ethers");
 const fs = require('fs');
 async function main() {
@@ -18,4 +19,4 @@ async function main() {
       console.error(error);
       process.exit(1);
   });
-  
+  */
