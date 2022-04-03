@@ -7,9 +7,9 @@ import "./IUnicadetsRenderer.sol";
 
 contract Unicadets is ERC721A, Ownable {
 
-    address UnicadetsRenderer;
+    address public UnicadetsRenderer;
 
-    mapping(uint256 => uint256) internal tokenIdToSeed;
+    mapping(uint256 => uint256) public tokenIdToSeed;
     mapping(uint256 => bool) internal seedToMinted;
 
     uint32 MAX_SUPPLY = 3000;
@@ -20,27 +20,35 @@ contract Unicadets is ERC721A, Ownable {
         UnicadetsRenderer = RenderContractAddress;
     }
 
-    // totalSupply() is never decremented
-    // and overflow is unrealistic
-    function currentPrice() public view returns (uint256) {
-        if (totalSupply() <= 300)
+
+    function _currentPrice(uint256 current_supply) internal pure returns (uint256) {
+        if (current_supply <= 300)
             return 0 ether;
-        else if (totalSupply() <= 2000)
+        else if (current_supply <= 2000)
             return .1 ether;
-        else if (totalSupply() <= 3000)
+        else if (current_supply <= 3000)
             return .15 ether;
         else
             return .1 ether;
     }
 
+    function _batchPrice(uint256 quantity, uint256 current_supply) internal pure returns (uint256) {
+        uint batch_price = 0 ether;
+        for (uint i = 0; i < quantity; i++)
+            batch_price += _currentPrice(current_supply + i);
+        return batch_price;
+    }
+    
+
     function mint (uint256 quantity) payable public {
         uint256 supply = totalSupply();
         require(msg.sender == tx.origin, "NO CHEATING");
+        require(quantity <= 10, "Maximum of 10 cadets per wallet!");
         require(supply <= MAX_SUPPLY, "Max supply reached!");
         require(supply + quantity <= MAX_SUPPLY, "Not enough left to mint");
-        require(msg.value >= quantity * currentPrice());
-        _safeMint(msg.sender, quantity);
+        require(msg.value >= _batchPrice(quantity, supply), "Not enough money provided!");
         _internalMint(supply, quantity);
+        _safeMint(msg.sender, quantity);
     }
 
     function _internalMint(uint256 current_token, uint256 remaining) internal {

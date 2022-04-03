@@ -85,7 +85,7 @@ contract UnicadetsRenderer {
     }
 
     function _imageURItoTokenURI (string memory imageURI) internal pure returns (string memory) {
-        string memory baseURL = "data:application/json;base64";
+        string memory baseURL = "data:application/json;base64,";
         return string(abi.encodePacked(
                 baseURL,
                 _encode(bytes(abi.encodePacked(
