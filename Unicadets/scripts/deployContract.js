@@ -3,8 +3,7 @@ const { Contract } = require("ethers");
 const fs = require('fs');
 const { BigNumber } = require("ethers");
 const { ethers } = require("hardhat")
-const { fetch } = require("node-fetch")
-globalThis.fetch = fetch
+
 
 
 async function main() {
@@ -21,24 +20,24 @@ async function main() {
   let Unicadets = await ERC721.deploy();
   await Unicadets.setRendererContract(UnicadetsRenderer.address)
 
-  let quantity = 10
+  let quantity = await Unicadets.MAX_MINT_PER()
   let price
   let tokenId
   
   tokenId = await Unicadets.totalSupply()
-  price = batchPrice(quantity, tokenId)
+  price = await Unicadets.getBatchPrice(quantity)
   await Unicadets.connect(acc1).mint(quantity, {
     value: price
   })
 
   tokenId = await Unicadets.totalSupply()
-  price = batchPrice(quantity, tokenId)
+  price = await Unicadets.getBatchPrice(quantity)
   await Unicadets.connect(acc2).mint(quantity, {
     value: price
   })
 
   tokenId = await Unicadets.totalSupply()
-  price = batchPrice(quantity, tokenId)
+  price = await Unicadets.getBatchPrice(quantity)
   await Unicadets.connect(acc3).mint(quantity, {
     value: price
   })
@@ -48,20 +47,22 @@ async function main() {
   
   let encoded
   for (let i = 0; i < current_supply; i++) {
-    // seed = await Unicadets.tokenIdToSeed(ethers.utils.parseUnits(i.toString()))
+
     encoded = await Unicadets.tokenURI(i)
     fs.writeFileSync(`./encoded_svgs/${i}.txt`, encoded)
   }
 
   for (let i = 0; i < current_supply; i++) {
-    fetch(`./encoded_svgs/${i}.txt`)
-      .then(response => response.text())
-      .then(data => {
-        let obj = JSON.parse(atob(data))
-        let svg = atob(obj['image'])
-        fs.writeFileSync(`./svgs_from_encoded/${i}.svg`)
-    });
+      let data = Buffer.from(fs.readFileSync(`./encoded_svgs/${i}.txt`), 'base64').toString()
+      data = data.slice(29, data.length)
+      data = JSON.parse(Buffer.from(data, 'base64').toString())
+      data = data['image']
+      data = data.slice(26, data.length)
+      data = Buffer.from(data, 'base64').toString()
+      fs.writeFileSync(`./decoded_svgs/${i}.svg`, data)
   }
+
+
 
 
 }
@@ -85,9 +86,7 @@ function batchPrice(num_tokens, current_supply) {
 function currentPrice(current_supply) {
   if (current_supply <= 300)
      return BigNumber.from("0");
-  else if (current_supply <= 2000)
-    return ethers.utils.parseUnits(".1");
-  else if (current_supply <= 3000)
+  else if (current_supply > 300 && current_supply <= 3000)
     return ethers.utils.parseUnits(".15");
   else
     return ethers.utils.parseUnits(".1");

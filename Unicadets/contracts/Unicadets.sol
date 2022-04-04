@@ -11,42 +11,46 @@ contract Unicadets is ERC721A, Ownable {
 
     mapping(uint256 => uint256) public tokenIdToSeed;
     mapping(uint256 => bool) internal seedToMinted;
-
-    uint32 MAX_SUPPLY = 3000;
+    uint32 public constant MAX_MINT_PER = 5;
+    uint64 public MAX_SUPPLY = 3000;
 
     constructor() ERC721A("Unicadets", "UNCDT") {}
 
     function setRendererContract(address RenderContractAddress) public onlyOwner {
         UnicadetsRenderer = RenderContractAddress;
     }
+    function setMaxSupply(uint32 _supply) public onlyOwner {
+        MAX_SUPPLY = _supply;
+    }
 
-
-    function _currentPrice(uint256 current_supply) internal pure returns (uint256) {
+    function _currentPrice(uint256 current_supply, uint64 max) internal pure returns (uint256) {
         if (current_supply <= 300)
             return 0 ether;
-        else if (current_supply <= 2000)
-            return .1 ether;
-        else if (current_supply <= 3000)
+        else if (current_supply > 300 && current_supply <= max)
             return .15 ether;
         else
             return .1 ether;
     }
 
-    function _batchPrice(uint256 quantity, uint256 current_supply) internal pure returns (uint256) {
+    function _batchPrice(uint256 quantity, uint256 current_supply, uint64 max) internal pure returns (uint256) {
         uint batch_price = 0 ether;
         for (uint i = 0; i < quantity; i++)
-            batch_price += _currentPrice(current_supply + i);
+            batch_price += _currentPrice(current_supply + i, max);
         return batch_price;
     }
-    
+
+    function getBatchPrice(uint256 quantityOfTokensToMint) public view returns (uint256) {
+            return _batchPrice(quantityOfTokensToMint, totalSupply(), MAX_SUPPLY);
+    }
 
     function mint (uint256 quantity) payable public {
         uint256 supply = totalSupply();
+        uint64 max = MAX_SUPPLY;
         require(msg.sender == tx.origin, "NO CHEATING");
-        require(quantity <= 10, "Maximum of 10 cadets per wallet!");
-        require(supply <= MAX_SUPPLY, "Max supply reached!");
-        require(supply + quantity <= MAX_SUPPLY, "Not enough left to mint");
-        require(msg.value >= _batchPrice(quantity, supply), "Not enough money provided!");
+        require(quantity <= MAX_MINT_PER, "Exceeding max cadets per wallet!");
+        require(supply <= max, "Max supply reached!");
+        require(supply + quantity <= max, "Not enough left to mint");
+        require(msg.value >= _batchPrice(quantity, supply, max), "Not enough money provided!");
         _internalMint(supply, quantity);
         _safeMint(msg.sender, quantity);
     }
@@ -80,38 +84,14 @@ contract Unicadets is ERC721A, Ownable {
         else
             return seed;
     }
- 
 
-    /*
-    function _draw(uint256 seed) internal pure returns (string memory) {
-        string memory top = _top(seed);
-        string memory legs = _legs(seed);
-
-        string memory torso = _body(seed);
-
-        string memory left_arm;
-        string memory right_arm;
-        (left_arm, right_arm) = _arms(seed);
-
-        string memory weapon = _weapon(seed);
-        return string(
-                abi.encodePacked(
-                    top, 
-                    torso, 
-                    left_arm, 
-                    right_arm, 
-                    weapon, 
-                    legs
-                    )
-                );
-    }*/
 
     function tokenURI (uint _tokenId) public override view returns (string memory) {
-        /*require(ownerOf(_tokenId) != address(0), "Token does not exist!");
-        string memory svg = _renderSVG(tokenIdToSeed[_tokenId]);
-        svg = _svgToImageURI(svg);
-        return _imageURItoTokenURI(svg);*/
         require(ownerOf(_tokenId) != address(0), "Token does not exist!");
         return IUnicadetsRenderer(UnicadetsRenderer).tokenURI(tokenIdToSeed[_tokenId]);
+    }
+
+    function withdraw() public onlyOwner {
+        payable(owner()).transfer(address(this).balance); 
     }
 }

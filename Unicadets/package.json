@@ -8,6 +8,8 @@
     "test:light": "hardhat test",
     "test": "hardhat coverage",
     "deploy:local": "hardhat run --network localhost scripts/deployContract.js",
+    "deploy-renderer:rinkeby": "npx hardhat run scripts/deployRendererRinkeby.js --network rinkeby",
+    "deploy:rinkeby": "npx hardhat run scripts/deployContractRinkeby.js --network rinkeby",
     "local-testnet": "hardhat node"
   },
   "keywords": [],
@@ -17,15 +19,18 @@
     "@nomiclabs/hardhat-ethers": "^2.0.5",
     "@nomiclabs/hardhat-waffle": "^2.0.3",
     "@openzeppelin/contracts": "^4.5.0",
+    "dotenv": "^16.0.0",
     "ethers": "^5.6.2",
     "fetch": "^1.1.0",
     "hardhat": "^2.9.2",
+    "hardhat-gas-reporter": "^1.0.8",
     "mocha": "^9.2.2",
     "node-fetch": "^3.2.3",
     "solidity-coverage": "^0.7.20"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@nomiclabs/hardhat-etherscan": "^3.0.3",
     "@nomiclabs/hardhat-waffle": "^2.0.3",
     "chai": "^4.3.6",
     "erc721a": "^3.1.0",

@@ -2,10 +2,13 @@ const { expect } = require("chai");
 const { BigNumber } = require("ethers");
 const { ethers } = require("hardhat")
 
-describe("Token contract", async function () {
+prov = ethers.getDefaultProvider();
+
+
+describe("Unicadets", async function () {
 
   beforeEach( async () => {
-
+  
   })
   
   it("Mints token to the owner", async function () {
@@ -15,9 +18,6 @@ describe("Token contract", async function () {
     accounts.shift()
     let ERC721 = await ethers.getContractFactory("Unicadets");
     let Unicadets = await ERC721.deploy();
-    console.log("Contract: " + Unicadets.address);
-
-    let tokenId = await Unicadets.totalSupply()
     let quantity = 1
     expect(await Unicadets.mint(quantity, {
         value: batchPrice(quantity, tokenId)
@@ -30,8 +30,58 @@ describe("Token contract", async function () {
       tokenId
       );
   });
+
   
-  it("Mints tokens to EOAs", async function () {
+
+  it("Mints one token to one EOA", async function () {
+
+    let accounts = await ethers.getSigners()
+    const owner = accounts[0]
+    const EOA = accounts[1]
+    accounts.shift()
+    let ERC721 = await ethers.getContractFactory("Unicadets");
+    let Unicadets = await ERC721.deploy();
+
+    let tokenId = await Unicadets.totalSupply()
+    let quantity = 1
+    expect(await Unicadets.connect(EOA).mint(quantity, {
+        value: await Unicadets.getBatchPrice(quantity)
+    })
+    )
+    .to.emit(Unicadets, "Transfer")
+    .withArgs(      
+      ethers.constants.AddressZero,
+      EOA.address,
+      tokenId
+      );
+  });
+
+  
+  it("Mints 5 tokens to one EOA", async function () {
+
+    let accounts = await ethers.getSigners()
+    const owner = accounts[0]
+    const EOA = accounts[1]
+    accounts.shift()
+    let ERC721 = await ethers.getContractFactory("Unicadets");
+    let Unicadets = await ERC721.deploy();
+
+    let tokenId = await Unicadets.totalSupply()
+    let quantity = 5
+    expect(await Unicadets.connect(EOA).mint(quantity, {
+        value: await Unicadets.getBatchPrice(quantity)
+    })
+    )
+    .to.emit(Unicadets, "Transfer")
+    .withArgs(      
+      ethers.constants.AddressZero,
+      EOA.address,
+      tokenId
+      );
+  });
+  
+  
+  it("Mints 5 tokens to 3 EOAs", async function () {
 
     let accounts = await ethers.getSigners()
     const owner = accounts[0]
@@ -39,7 +89,7 @@ describe("Token contract", async function () {
     let [acc1, acc2, acc3] = accounts
     let ERC721 = await ethers.getContractFactory("Unicadets");
     let Unicadets = await ERC721.deploy();
-    let quantity = 10
+    let quantity = await Unicadets.MAX_MINT_PER()
     let price
     let tokenId
     
@@ -95,12 +145,12 @@ it("Mints with unique seeds assigned to tokenIdToSeed mapping", async function (
   let [acc1, acc2, acc3] = accounts
   let ERC721 = await ethers.getContractFactory("Unicadets");
   let Unicadets = await ERC721.deploy();
-  let quantity = 10
+  let quantity = await Unicadets.MAX_MINT_PER()
   let price
   let tokenId
   
   tokenId = await Unicadets.totalSupply()
-  price = batchPrice(quantity, tokenId)
+  price = await Unicadets.getBatchPrice(quantity)
   await Unicadets.connect(acc1).mint(quantity, {
     value: price
   })
@@ -109,7 +159,7 @@ it("Mints with unique seeds assigned to tokenIdToSeed mapping", async function (
   expect(await Unicadets.balanceOf(acc1.address)).to.equal(quantity)
 
   tokenId = await Unicadets.totalSupply()
-  price = batchPrice(quantity, tokenId)
+  price = await Unicadets.getBatchPrice(quantity)
   await Unicadets.connect(acc2).mint(quantity, {
     value: price
   })
@@ -117,7 +167,7 @@ it("Mints with unique seeds assigned to tokenIdToSeed mapping", async function (
   expect(await Unicadets.balanceOf(acc2.address)).to.equal(quantity)
 
   tokenId = await Unicadets.totalSupply()
-  price = batchPrice(quantity, tokenId)
+  price = await Unicadets.getBatchPrice(quantity)
   await Unicadets.connect(acc3).mint(quantity, {
     value: price
   })
@@ -139,12 +189,12 @@ it("Assigns ownership from minting correctly", async function () {
     let [acc1, acc2, acc3] = accounts
     let ERC721 = await ethers.getContractFactory("Unicadets");
     let Unicadets = await ERC721.deploy();
-    let quantity = 10
+    let quantity = await Unicadets.MAX_MINT_PER()
     let price
     let tokenId
     
     tokenId = await Unicadets.totalSupply()
-    price = batchPrice(quantity, tokenId)
+    price = await Unicadets.getBatchPrice(quantity)
     await Unicadets.connect(acc1).mint(quantity, {
       value: price
     })
@@ -163,12 +213,12 @@ it("Stores the tokenIDs correctly", async function () {
   let [acc1, acc2, acc3] = accounts
   let ERC721 = await ethers.getContractFactory("Unicadets");
   let Unicadets = await ERC721.deploy();
-  let quantity = 10
+  let quantity = await Unicadets.MAX_MINT_PER();
   let price
   let tokenId
   
   tokenId = await Unicadets.totalSupply()
-  price = batchPrice(quantity, tokenId)
+  price = await Unicadets.getBatchPrice(quantity)
   await Unicadets.connect(acc1).mint(quantity, {
     value: price
   })
@@ -177,7 +227,7 @@ it("Stores the tokenIDs correctly", async function () {
   expect(await Unicadets.balanceOf(acc1.address)).to.equal(quantity)
 
   tokenId = await Unicadets.totalSupply()
-  price = batchPrice(quantity, tokenId)
+  price = await Unicadets.getBatchPrice(quantity)
   await Unicadets.connect(acc2).mint(quantity, {
     value: price
   })
@@ -185,7 +235,7 @@ it("Stores the tokenIDs correctly", async function () {
   expect(await Unicadets.balanceOf(acc2.address)).to.equal(quantity)
 
   tokenId = await Unicadets.totalSupply()
-  price = batchPrice(quantity, tokenId)
+  price = await Unicadets.getBatchPrice(quantity)
   await Unicadets.connect(acc3).mint(quantity, {
     value: price
   })
@@ -201,6 +251,51 @@ it("Stores the tokenIDs correctly", async function () {
 })
 
 });
+
+it("Transfers contract balance to the owner", async function () {
+    let accounts = await ethers.getSigners()
+    const owner = accounts[0]
+    accounts.shift()
+    let [acc1, acc2, acc3] = accounts
+    let ERC721 = await ethers.getContractFactory("Unicadets");
+    let Unicadets = await ERC721.deploy();
+    let quantity = await Unicadets.MAX_MINT_PER();
+    let price
+    let tokenId
+    
+    tokenId = await Unicadets.totalSupply()
+    price = await Unicadets.getBatchPrice(quantity)
+    await Unicadets.connect(acc1).mint(quantity, {
+      value: price
+    })
+
+    expect(await Unicadets.ownerOf(tokenId)).to.equal(acc1.address)
+    expect(await Unicadets.balanceOf(acc1.address)).to.equal(quantity)
+
+    tokenId = await Unicadets.totalSupply()
+    price = await Unicadets.getBatchPrice(quantity)
+    await Unicadets.connect(acc2).mint(quantity, {
+      value: price
+    })
+    expect(await Unicadets.ownerOf(tokenId)).to.equal(acc2.address)
+    expect(await Unicadets.balanceOf(acc2.address)).to.equal(quantity)
+
+    tokenId = await Unicadets.totalSupply()
+    price = await Unicadets.getBatchPrice(quantity)
+    await Unicadets.connect(acc3).mint(quantity, {
+      value: price
+    })
+    expect(await Unicadets.ownerOf(tokenId)).to.equal(acc3.address)
+    expect(await Unicadets.balanceOf(acc3.address)).to.equal(quantity)
+
+    
+    let ownerBalanceBefore = await prov.getBalance(owner.address);
+    await Unicadets.connect(owner).withdraw()
+    let ownerBalanceAfter = await prov.getBalance(owner.address);
+    expect(ownerBalanceAfter.gt(ownerBalanceBefore))
+
+    
+})
 
 function batchPrice(num_tokens, current_supply) {
     let total_price = BigNumber.from("0")
