@@ -6,8 +6,8 @@ async function main() {
     let uni = await ethers.getContractFactory("Unicadets");
     let Unicadets = await uni.deploy();
     //await Unicadets.setRendererContract(UnicadetsRenderer.address)
-    // Renderer address: 0xF7eC73f797d86de44F75eB7f40c6D7148386499b
-    // Base address: 0x904016901D1D7D6C99e21527E6bA7c09B84E81c7
+    // Renderer address: 0x048DFC061059f60A925FB664659aB656774dB0aF
+    // Base address: 0x40ad35478462782EFE267f748081591d49Ccc9C5
     // Start deployment, returning a promise that resolves to a contract object
     console.log("Unicadets deployed to:", Unicadets.address);
  }

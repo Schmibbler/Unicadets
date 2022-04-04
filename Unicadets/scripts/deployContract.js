@@ -19,7 +19,8 @@ async function main() {
   let ERC721 = await ethers.getContractFactory("Unicadets");
   let Unicadets = await ERC721.deploy();
   await Unicadets.setRendererContract(UnicadetsRenderer.address)
-
+  console.log("Renderer deployed to: " + UnicadetsRenderer.address)
+  console.log("Unicadets deployed to " + Unicadets.address)
   let quantity = await Unicadets.MAX_MINT_PER()
   let price
   let tokenId

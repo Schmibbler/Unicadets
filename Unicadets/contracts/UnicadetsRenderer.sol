@@ -12,7 +12,7 @@ contract UnicadetsRenderer {
     function tokenURI(uint256 _seed) external pure returns (string memory) {
         string memory svg = _renderSVG(_seed);
         svg = _svgToImageURI(svg);
-        return _imageURItoTokenURI(svg);
+        return _imageURItoTokenURI(svg, _seed);
     }
 
     function toString(uint256 value) internal pure returns (string memory) {
@@ -34,69 +34,163 @@ contract UnicadetsRenderer {
         return string(buffer);
     }
 
-    function _legs(uint256 rand) internal pure returns (string memory) {
+    function _legs(uint256 rand, bool inUnicode) internal pure returns (string memory) {
 
         // ⦣⦣ ιι ›› ⅬⅬ ⲧⲧ ❬❬ ⸝⸝ ❠❠ ⱹⱹ ⱼⱼ ⸥⸥ ⌋⌋ ⧼⧼ ❭❭ ↯↯ ₍₍ ii ,, vv ❱❱ ɺɺ ʁʁ 
-        uint16[LEG_COUNT] memory legs = [10659, 953, 8250, 8556, 
-                                11431, 10092, 11805, 
-                            10080, 11385, 11388, 
-                        11813, 8971, 10748, 
-                    10093, 8623, 8333, 
-                105, 44, 118, 10097, 634, 641];    
-        return toString(legs[rand % LEG_COUNT]);
+        if (inUnicode == false) {
+                uint16[LEG_COUNT] memory legs = [10659, 953, 8250, 8556, 
+                            11431, 10092, 11805, 
+                        10080, 11385, 11388, 
+                    11813, 8971, 10748, 
+                10093, 8623, 8333, 
+            105, 44, 118, 10097, 634, 641]; 
+            return toString(legs[rand % LEG_COUNT]);
+        } else {
+            string[LEG_COUNT] memory legs_str = [
+                unicode"⦣⦣",
+                unicode"ιι",
+                unicode"››",
+                unicode"ⅬⅬ",
+                unicode"ⲧⲧ",
+                unicode"❬❬",
+                unicode"⸝⸝",
+                unicode"❠❠",
+                unicode"ⱹⱹ",
+                unicode"ⱼⱼ",
+                unicode"⸥⸥",
+                unicode"⌋⌋",
+                unicode"⧼⧼",
+                unicode"❭❭",
+                unicode"↯↯",
+                unicode"₍₍",
+                unicode"ii",
+                unicode",,",
+                unicode"vv",
+                unicode"❱❱",
+                unicode"ɺɺ",
+                unicode"ʁʁ"
+            ];
+            return legs_str[rand % LEG_COUNT];
+        }
+  
     }
 
 
-    function _weapon(uint rand) internal pure returns (string memory) {
-
+    function _weapon(uint rand, bool inUnicode) internal pure returns (string memory) {
         // Ⳕ ﴽ ⟆ ℥ ⨛ ⌈ ⼬ ⚸ Ⲋ ⨙ ⨔ ⍤
-        uint16[WEAPON_COUNT] memory weapons = [
-            11476, 64829, 10182, 8485, 10779,
-            8968, 12076, 9912, 11402, 10777,
-            10772, 9060
-        ];
-
-        return toString(weapons[rand % WEAPON_COUNT]);
+        if (inUnicode == false) {
+            uint16[WEAPON_COUNT] memory weapons = [
+                11476, 64829, 10182, 8485, 10779,
+                8968, 12076, 9912, 11402, 10777,
+                10772, 9060
+            ];
+            return toString(weapons[rand % WEAPON_COUNT]);
+        } else {
+            string[WEAPON_COUNT] memory weapons_str = [
+                unicode"Ⳕ",
+                unicode"ﴽ",
+                unicode"⟆",
+                unicode"℥",
+                unicode"⨛",
+                unicode"⌈",
+                unicode"⼬",
+                unicode"⚸",
+                unicode"Ⲋ",
+                unicode"⨙",
+                unicode"⨔",
+                unicode"⍤"
+            ];
+            return weapons_str[rand % WEAPON_COUNT];
+        }
     }
     
 
-    function _body(uint256 rand) internal pure returns (string memory) {
+    function _body(uint256 rand, bool inUnicode) internal pure returns (string memory) {
  
         // ◳ ⛻ ⬯ ≋ ⼞ ⛫ ℿ ▤ ▧ ⾻ ⻩
-        uint16[TORSO_COUNT] memory left_torsos = [9715, 9979, 11055,
-                                         8779, 12062, 9963,
-                                    8511, 9636, 9639, 12219, 12009];
-
-        uint torso_int = rand % TORSO_COUNT;
-        
-        return toString(left_torsos[torso_int]);
-        
+        if (inUnicode == false) {
+            uint16[TORSO_COUNT] memory torsos = [9715, 9979, 11055,
+                                            8779, 12062, 9963,
+                                        8511, 9636, 9639, 12219, 12009];
+            return toString(torsos[rand % TORSO_COUNT]);
+        } else {
+            string[TORSO_COUNT] memory torsos_str = [
+                unicode"◳", 
+                unicode"⛻",
+                unicode"⬯",
+                unicode"≋",
+                unicode"⼞",
+                unicode"⛫",
+                unicode"ℿ",
+                unicode"▤",
+                unicode"▧",
+                unicode"⾻",
+                unicode"⻩"
+            ];
+            return torsos_str[rand % TORSO_COUNT];
+        }       
     }
 
-    function _arms(uint256 rand) internal pure returns (string memory, string memory) {
+    function _arms(uint256 rand, bool inUnicode) internal pure returns (string memory, string memory) {
 
         // ~ - ⌐ ↼ ⹀ ∼ ⤚ = ↜
-        uint16[ARM_COUNT] memory left_arms = [126, 45, 8976, 
-                                        8636,  11840,
-                                8764, 10522, 61, 8604];
-                                
         // ~ - ¬ ⇀ ⹀ ∼ ⤙ = ↝
-        uint16[ARM_COUNT] memory right_arms = [126, 45, 172, 
-                                8640, 11840,
-                            8764, 10521, 61, 8605];
+        if (inUnicode == false) {
+            uint16[ARM_COUNT] memory left_arms = [126, 45, 8976, 
+                                            8636,  11840,
+                                    8764, 10522, 61, 8604];
+                                    
+        
+            uint16[ARM_COUNT] memory right_arms = [126, 45, 172, 
+                                    8640, 11840,
+                                8764, 10521, 61, 8605];
 
-        uint8 arm_pair = uint8(rand % ARM_COUNT);
-        return (toString(left_arms[arm_pair]), toString(right_arms[arm_pair]));
+            uint8 arm_pair = uint8(rand % ARM_COUNT);
+            return (toString(left_arms[arm_pair]), toString(right_arms[arm_pair]));
+        } else {
+            uint8 arm_pair = uint8(rand % ARM_COUNT);
+            string[ARM_COUNT] memory left_arms_str = [
+                unicode"~",
+                unicode"-",
+                unicode"⌐",
+                unicode"↼",
+                unicode"⹀",
+                unicode"∼",
+                unicode"⤚",
+                unicode"=",
+                unicode"↜"
+
+            ];
+            string[ARM_COUNT] memory right_arms_str = [
+                unicode"~",
+                unicode"-",
+                unicode"¬",
+                unicode"⇀",
+                unicode"⹀",
+                unicode"∼",
+                unicode"⤙",
+                unicode"=",
+                unicode"↝"
+            ];
+            string memory arms_str = string(abi.encodePacked(left_arms_str[arm_pair], right_arms_str[arm_pair]));
+            return (arms_str, "");
+        }
+
+
+
     }
 
-    function _imageURItoTokenURI (string memory imageURI) internal pure returns (string memory) {
+    function _imageURItoTokenURI (string memory imageURI, uint256 _seed) internal pure returns (string memory) {
         string memory baseURL = "data:application/json;base64,";
+        string memory attributes = getAttributes(_seed);
         return string(abi.encodePacked(
                 baseURL,
                 _encode(bytes(abi.encodePacked(
                     '{"name": "Unicadets", "description":"Unicode Cadets living entirely on the blockchain!", "attributes":"", "image":"',
                     imageURI, 
-                    '"}')
+                    '",',
+                    attributes, 
+                    '}')
                     ))
                   )); 
     }
@@ -111,15 +205,58 @@ contract UnicadetsRenderer {
                     );        
     }
 
-    function _top(uint256 rand) internal pure returns (string memory) {
+    function getAttributes(uint256 rand) internal pure returns (string memory) {
+        string memory top = _top(rand, true);
+        string memory arms;
+        (arms, ) = _arms(rand, true);
+        string memory torso = _body(rand, true);
+        string memory weapon = _weapon(rand, true);
+        string memory legs = _legs(rand, true);
 
-        // 〇 ⍝ ಠ ఠ ◔ ☯ ツ ☲ ◉ ⳬ ∰ ♕ ◓ ❃ ⭖ Ⳝ ✹ ☳ ⍨ ⱒ ⚍ ⸿ ✪ ⪣ ∬        
-        uint16[HEAD_COUNT] memory heads = [12295, 9053, 3232, 3104, 9684, 9775,
-                                12484, 9778, 9673, 11500, 8752, 9813,
-                            9683, 10051, 11094, 11484, 10041, 9779,
-                        9064, 11346, 9869, 11839, 10026, 10915,
-                    8748];
-        return toString(heads[rand % HEAD_COUNT]);
+        return string(abi.encodePacked('"attributes":[{"trait_type":"Helmet","value":"', top,'"},{"trait_type":"Chestplate", "value":"', torso,'"},{"trait_type":"Gauntlets","value":"', arms,'"},{"trait_type":"Weapon","value":"', weapon,'"},{"trait_type":"Leggings","value":"', legs,'"}]'));
+    }
+
+    function _top(uint256 rand, bool inUnicode) internal pure returns (string memory) {
+
+        // 〇 ⍝ ಠ ఠ ◔ ☯ ツ ☲ ◉ ⳬ ∰ ♕ ◓ ❃ ⭖ Ⳝ ✹ ☳ ⍨ ⱒ ⚍ ⸿ ✪ ⪣ ∬
+        if (inUnicode == false) {
+            uint16[HEAD_COUNT] memory heads = [12295, 9053, 3232, 3104, 9684, 9775,
+                                    12484, 9778, 9673, 11500, 8752, 9813,
+                                9683, 10051, 11094, 11484, 10041, 9779,
+                            9064, 11346, 9869, 11839, 10026, 10915,
+                        8748];
+            return toString(heads[rand % HEAD_COUNT]);
+        } else {
+            string[HEAD_COUNT] memory heads_str = [
+                unicode"〇",
+                unicode"⍝",
+                unicode"ಠ",
+                unicode"ఠ",
+                unicode"◔",
+                unicode"☯",
+                unicode"ツ",
+                unicode"☲",
+                unicode"◉",
+                unicode"ⳬ",
+                unicode"∰",
+                unicode"♕",
+                unicode"◓",
+                unicode"❃",
+                unicode"⭖",
+                unicode"Ⳝ",
+                unicode"✹",
+                unicode"☳",
+                unicode"⍨",
+                unicode"ⱒ",
+                unicode"⚍",
+                unicode"⸿",
+                unicode"✪",
+                unicode"⪣",
+                unicode"∬"
+            ];
+            return heads_str[rand % HEAD_COUNT];
+        }
+
     }
 
     function _encode(bytes memory data) internal pure returns (string memory) {
@@ -198,14 +335,14 @@ contract UnicadetsRenderer {
 
     function _renderSVG(uint256 seed) public pure returns(string memory) {
 
-        string memory top = _top(seed);
-        string memory torso = _body(seed);
+        string memory top = _top(seed, false);
+        string memory torso = _body(seed, false);
 
         string memory left_arm;
         string memory right_arm;
-        (left_arm, right_arm) = _arms(seed);
-        string memory leg = _legs(seed);
-        string memory weapon = _weapon(seed);
+        (left_arm, right_arm) = _arms(seed, false);
+        string memory leg = _legs(seed, false);
+        string memory weapon = _weapon(seed, false);
         uint weapon_on_right = seed % 2;
         string memory weapon_x;
         
