@@ -2,7 +2,7 @@ require("@nomiclabs/hardhat-waffle");
 require('solidity-coverage');
 require("@nomiclabs/hardhat-etherscan");
 require("hardhat-gas-reporter");
-
+require('dotenv');
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -19,7 +19,7 @@ module.exports = {
     hardhat: {},
     rinkeby: {
       url: "https://eth-rinkeby.alchemyapi.io/v2/aAbSGN-ZOS_0rFHQR3cqSiItIoqbV6-W",
-      accounts: [``]
+      accounts: [`e81b7f82dcf6b43ebd851ad6c41c8cda6b965cb53f8a6672c696b823f649cbf8`]
     }
   },
   etherscan: {

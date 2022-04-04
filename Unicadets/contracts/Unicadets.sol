@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity ^0.8.5;
 import "erc721a/contracts/ERC721A.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IUnicadetsRenderer.sol";
@@ -12,7 +12,7 @@ contract Unicadets is ERC721A, Ownable {
     mapping(uint256 => uint256) public tokenIdToSeed;
     mapping(uint256 => bool) internal seedToMinted;
     uint32 public constant MAX_MINT_PER = 5;
-    uint64 public MAX_SUPPLY = 3000;
+    uint64 public MAX_SUPPLY = 5000;
 
     constructor() ERC721A("Unicadets", "UNCDT") {}
 
@@ -24,12 +24,12 @@ contract Unicadets is ERC721A, Ownable {
     }
 
     function _currentPrice(uint256 current_supply, uint64 max) internal pure returns (uint256) {
-        if (current_supply <= 300)
+        if (current_supply <= 500)
             return 0 ether;
-        else if (current_supply > 300 && current_supply <= max)
-            return .15 ether;
+        else if (current_supply > 500 && current_supply <= max)
+            return .09 ether;
         else
-            return .1 ether;
+            return .09 ether;
     }
 
     function _batchPrice(uint256 quantity, uint256 current_supply, uint64 max) internal pure returns (uint256) {

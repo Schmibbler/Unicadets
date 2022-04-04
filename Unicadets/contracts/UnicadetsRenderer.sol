@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity ^0.8.5;
 
 contract UnicadetsRenderer {
 
     uint256 private constant ARM_COUNT = 9;
     uint256 private constant WEAPON_COUNT = 12;
     uint256 private constant TORSO_COUNT = 11;
-    uint256 private constant LEG_COUNT = 21;
+    uint256 private constant LEG_COUNT = 22;
     uint256 private constant HEAD_COUNT = 25;
 
     function tokenURI(uint256 _seed) external pure returns (string memory) {
@@ -35,19 +35,21 @@ contract UnicadetsRenderer {
     }
 
     function _legs(uint256 rand) internal pure returns (string memory) {
-        uint16[LEG_COUNT] memory legs = [634, 641, 10659, 
-                                    953, 8250, 8556, 
+
+        // ⦣⦣ ιι ›› ⅬⅬ ⲧⲧ ❬❬ ⸝⸝ ❠❠ ⱹⱹ ⱼⱼ ⸥⸥ ⌋⌋ ⧼⧼ ❭❭ ↯↯ ₍₍ ii ,, vv ❱❱ ɺɺ ʁʁ 
+        uint16[LEG_COUNT] memory legs = [10659, 953, 8250, 8556, 
                                 11431, 10092, 11805, 
                             10080, 11385, 11388, 
                         11813, 8971, 10748, 
                     10093, 8623, 8333, 
-                105, 44, 118];    
+                105, 44, 118, 10097, 634, 641];    
         return toString(legs[rand % LEG_COUNT]);
     }
 
 
     function _weapon(uint rand) internal pure returns (string memory) {
 
+        // Ⳕ ﴽ ⟆ ℥ ⨛ ⌈ ⼬ ⚸ Ⲋ ⨙ ⨔ ⍤
         uint16[WEAPON_COUNT] memory weapons = [
             11476, 64829, 10182, 8485, 10779,
             8968, 12076, 9912, 11402, 10777,
@@ -59,10 +61,11 @@ contract UnicadetsRenderer {
     
 
     function _body(uint256 rand) internal pure returns (string memory) {
-
-        uint16[TORSO_COUNT] memory left_torsos = [12219, 9715, 9979, 11055,
-                                        12009, 8779, 12062, 
-                                    8511, 9636, 8584, 9639];
+ 
+        // ◳ ⛻ ⬯ ≋ ⼞ ⛫ ℿ ▤ ▧ ⾻ ⻩
+        uint16[TORSO_COUNT] memory left_torsos = [9715, 9979, 11055,
+                                         8779, 12062, 9963,
+                                    8511, 9636, 9639, 12219, 12009];
 
         uint torso_int = rand % TORSO_COUNT;
         
@@ -72,13 +75,15 @@ contract UnicadetsRenderer {
 
     function _arms(uint256 rand) internal pure returns (string memory, string memory) {
 
+        // ~ - ⌐ ↼ ⹀ ∼ ⤚ = ↜
         uint16[ARM_COUNT] memory left_arms = [126, 45, 8976, 
-                                        8636, 8604, 11840,
-                                8764, 10522, 61];
+                                        8636,  11840,
+                                8764, 10522, 61, 8604];
                                 
+        // ~ - ¬ ⇀ ⹀ ∼ ⤙ = ↝
         uint16[ARM_COUNT] memory right_arms = [126, 45, 172, 
-                                8640, 8605, 11840,
-                            8764, 10521, 61];
+                                8640, 11840,
+                            8764, 10521, 61, 8605];
 
         uint8 arm_pair = uint8(rand % ARM_COUNT);
         return (toString(left_arms[arm_pair]), toString(right_arms[arm_pair]));
@@ -108,7 +113,7 @@ contract UnicadetsRenderer {
 
     function _top(uint256 rand) internal pure returns (string memory) {
 
-        //〇⍝ಠఠ◔☯ツ☲◉ⳬ∰♕◓❃⭖Ⳝ✹☳⍨ⱒ⚍⸿✪⪣∬        
+        // 〇 ⍝ ಠ ఠ ◔ ☯ ツ ☲ ◉ ⳬ ∰ ♕ ◓ ❃ ⭖ Ⳝ ✹ ☳ ⍨ ⱒ ⚍ ⸿ ✪ ⪣ ∬        
         uint16[HEAD_COUNT] memory heads = [12295, 9053, 3232, 3104, 9684, 9775,
                                 12484, 9778, 9673, 11500, 8752, 9813,
                             9683, 10051, 11094, 11484, 10041, 9779,
@@ -208,11 +213,11 @@ contract UnicadetsRenderer {
         {
             weapon_x = '75%';
             left_arm = string(abi.encodePacked('<text x="85" y="128" font-size="60px" text-anchor="middle" dominant-baseline="central" transform="rotate(-45, 100, 145)">&#', left_arm, ';</text>'));
-            right_arm = string(abi.encodePacked('<text x="60%" y="60%" font-size="60px">&#', right_arm, ';</text>'));
+            right_arm = string(abi.encodePacked('<text x="60%" y="60%" font-size="60px" text-anchor="middle" dominant-baseline="central" transform="rotate(15, 240, 200)">&#', right_arm, ';</text>'));
         } else if (weapon_on_right == 0)
         {
             weapon_x = '15%';
-            left_arm = string(abi.encodePacked('<text x="24%" y="60%" font-size="60px">&#', left_arm, ';</text>'));
+            left_arm = string(abi.encodePacked('<text x="148" y="128" font-size="60px" text-anchor="middle" dominant-baseline="central" transform="rotate(-15, 140, 400)">&#', left_arm, ';</text>'));
             right_arm = string(abi.encodePacked('<text x="172" y="128" font-size="60px" text-anchor="middle" dominant-baseline="central" transform="rotate(45, 158, 128)">&#', right_arm, ';</text>'));
         }
 
