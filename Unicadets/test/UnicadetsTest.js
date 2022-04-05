@@ -19,6 +19,7 @@ describe("Unicadets", async function () {
     let ERC721 = await ethers.getContractFactory("Unicadets");
     let Unicadets = await ERC721.deploy();
     let quantity = 1
+    let tokenId = await Unicadets.totalSupply()
     expect(await Unicadets.mint(quantity, {
         value: batchPrice(quantity, tokenId)
     })

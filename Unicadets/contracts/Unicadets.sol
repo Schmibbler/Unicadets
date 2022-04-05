@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity ^0.8.5;
+pragma solidity >=0.7.0 <0.9.0;
 import "erc721a/contracts/ERC721A.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IUnicadetsRenderer.sol";
@@ -13,6 +13,7 @@ contract Unicadets is ERC721A, Ownable {
     mapping(uint256 => bool) internal seedToMinted;
     uint32 public constant MAX_MINT_PER = 5;
     uint64 public MAX_SUPPLY = 5000;
+    bool public DEVS_HAVE_MINTED = false;
 
     constructor() ERC721A("Unicadets", "UNCDT") {}
 
@@ -27,9 +28,9 @@ contract Unicadets is ERC721A, Ownable {
         if (current_supply <= 500)
             return 0 ether;
         else if (current_supply > 500 && current_supply <= max)
-            return .09 ether;
+            return .1 ether;
         else
-            return .09 ether;
+            return .1 ether;
     }
 
     function _batchPrice(uint256 quantity, uint256 current_supply, uint64 max) internal pure returns (uint256) {
@@ -46,13 +47,21 @@ contract Unicadets is ERC721A, Ownable {
     function mint (uint256 quantity) payable public {
         uint256 supply = totalSupply();
         uint64 max = MAX_SUPPLY;
-        require(msg.sender == tx.origin, "NO CHEATING");
-        require(quantity <= MAX_MINT_PER, "Exceeding max cadets per wallet!");
+        require(msg.sender == tx.origin, "No minting from contracts!");
+        require(quantity <= MAX_MINT_PER, "Exceeding max mints per transaction!");
         require(supply <= max, "Max supply reached!");
         require(supply + quantity <= max, "Not enough left to mint");
         require(msg.value >= _batchPrice(quantity, supply, max), "Not enough money provided!");
         _internalMint(supply, quantity);
         _safeMint(msg.sender, quantity);
+    }
+
+    function devTeamMint (uint256 quantity) public onlyOwner {
+        require(quantity <= 30, "Don't be greedy!");
+        require(DEVS_HAVE_MINTED == false, "Developer team has already minted!");
+        _internalMint(totalSupply(), quantity);
+        _safeMint(msg.sender, quantity);
+        DEVS_HAVE_MINTED = true;
     }
 
     function _internalMint(uint256 current_token, uint256 remaining) internal {

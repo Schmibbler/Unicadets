@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.5;
+pragma solidity >=0.7.0 <0.9.0;
 
 contract UnicadetsRenderer {
 
@@ -159,7 +159,6 @@ contract UnicadetsRenderer {
                 unicode"⤚",
                 unicode"=",
                 unicode"↜"
-
             ];
             string[ARM_COUNT] memory right_arms_str = [
                 unicode"~",
@@ -256,7 +255,6 @@ contract UnicadetsRenderer {
             ];
             return heads_str[rand % HEAD_COUNT];
         }
-
     }
 
     function _encode(bytes memory data) internal pure returns (string memory) {
@@ -361,20 +359,9 @@ contract UnicadetsRenderer {
         string memory svg_string = '<svg width="256px" height="256px"  xmlns="http://www.w3.org/2000/svg">';
         top = string(abi.encodePacked('<text x="38%" y="33%" font-size="50px">&#', top, ';</text>'));
         torso = string(abi.encodePacked('<text x="38%" y="60%" font-size="60px">&#', torso, ';</text>'));
-        weapon = string(abi.encodePacked('<text x="', 
-                                                weapon_x, 
-                                                '" y="60%" font-size="60px">&#', 
-                                                weapon, 
-                                                ';</text>'));
-                                                
-        string memory legs = string(abi.encodePacked(
-                                                '<text x="40%" y="80%" font-size="50px">&#',
-                                                leg,
-                                                ';</text>',
-                                                '<text x="52%" y="80%" font-size="50px">&#',
-                                                leg,
-                                                ';</text></svg>'));
-        
+        weapon = string(abi.encodePacked('<text x="', weapon_x,'" y="60%" font-size="60px">&#', weapon, ';</text>'));        
+        string memory legs = string(abi.encodePacked('<text x="40%" y="80%" font-size="50px">&#', leg, ';</text>','<text x="52%" y="80%" font-size="50px">&#', leg, ';</text></svg>'));
+    
         return string(abi.encodePacked(
                     svg_string,
                     top,

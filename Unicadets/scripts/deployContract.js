@@ -50,17 +50,17 @@ async function main() {
   for (let i = 0; i < current_supply; i++) {
 
     encoded = await Unicadets.tokenURI(i)
-    fs.writeFileSync(`./encoded_svgs/${i}.txt`, encoded)
+    fs.writeFileSync(`../encoded_svgs/${i}.txt`, encoded)
   }
 
   for (let i = 0; i < current_supply; i++) {
-      let data = Buffer.from(fs.readFileSync(`./encoded_svgs/${i}.txt`), 'base64').toString()
+      let data = Buffer.from(fs.readFileSync(`../encoded_svgs/${i}.txt`), 'base64').toString()
       data = data.slice(29, data.length)
       data = JSON.parse(Buffer.from(data, 'base64').toString())
       data = data['image']
       data = data.slice(26, data.length)
       data = Buffer.from(data, 'base64').toString()
-      fs.writeFileSync(`./decoded_svgs/${i}.svg`, data)
+      fs.writeFileSync(`../decoded_svgs/${i}.svg`, data)
   }
 
 

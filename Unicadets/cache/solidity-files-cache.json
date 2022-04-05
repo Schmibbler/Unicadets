@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\Shaun\\Desktop\\Unicadets\\Unicadets\\contracts\\Unicadets.sol": {
-      "lastModificationDate": 1649028760355,
-      "contentHash": "e0386e3da94a7b90060c1431de2387fa",
+      "lastModificationDate": 1649185264446,
+      "contentHash": "28a3e0765e72a86eb47f8c48f178b095",
       "sourceName": "contracts/Unicadets.sol",
       "solcConfig": {
         "version": "0.8.5",
@@ -25,6 +25,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           }
         }
       },
@@ -80,7 +83,7 @@
       ]
     },
     "C:\\Users\\Shaun\\Desktop\\Unicadets\\Unicadets\\node_modules\\erc721a\\contracts\\ERC721A.sol": {
-      "lastModificationDate": 1648846813162,
+      "lastModificationDate": 1649184944425,
       "contentHash": "be835e0586c27b4cb2b27cff3517b89d",
       "sourceName": "erc721a/contracts/ERC721A.sol",
       "solcConfig": {
@@ -103,6 +106,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           }
         }
       },
@@ -123,7 +129,7 @@
       ]
     },
     "C:\\Users\\Shaun\\Desktop\\Unicadets\\Unicadets\\node_modules\\@openzeppelin\\contracts\\access\\Ownable.sol": {
-      "lastModificationDate": 1648846813155,
+      "lastModificationDate": 1649184949195,
       "contentHash": "8398972af73b4e9e5ff3b31cad86234f",
       "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
       "solcConfig": {
@@ -146,6 +152,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           }
         }
       },
@@ -160,7 +169,7 @@
       ]
     },
     "C:\\Users\\Shaun\\Desktop\\Unicadets\\Unicadets\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721.sol": {
-      "lastModificationDate": 1648846813109,
+      "lastModificationDate": 1649184948860,
       "contentHash": "27d219ec6f69478d065fdbfa7931da68",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
       "solcConfig": {
@@ -183,6 +192,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           }
         }
       },
@@ -197,7 +209,7 @@
       ]
     },
     "C:\\Users\\Shaun\\Desktop\\Unicadets\\Unicadets\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721Receiver.sol": {
-      "lastModificationDate": 1648846813119,
+      "lastModificationDate": 1649184948950,
       "contentHash": "592df588492d45fdcf46b3cb608c0fbf",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
       "solcConfig": {
@@ -220,6 +232,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           }
         }
       },
@@ -232,7 +247,7 @@
       ]
     },
     "C:\\Users\\Shaun\\Desktop\\Unicadets\\Unicadets\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\extensions\\IERC721Metadata.sol": {
-      "lastModificationDate": 1648846813116,
+      "lastModificationDate": 1649184948921,
       "contentHash": "efbc0d15b80a74e34dbe8da0f3e879bb",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol",
       "solcConfig": {
@@ -255,6 +270,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           }
         }
       },
@@ -269,7 +287,7 @@
       ]
     },
     "C:\\Users\\Shaun\\Desktop\\Unicadets\\Unicadets\\node_modules\\@openzeppelin\\contracts\\utils\\Address.sol": {
-      "lastModificationDate": 1648846812937,
+      "lastModificationDate": 1649184946780,
       "contentHash": "ad714a6368ee7d43cded6bbe8af0b155",
       "sourceName": "@openzeppelin/contracts/utils/Address.sol",
       "solcConfig": {
@@ -292,6 +310,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           }
         }
       },
@@ -304,7 +325,7 @@
       ]
     },
     "C:\\Users\\Shaun\\Desktop\\Unicadets\\Unicadets\\node_modules\\@openzeppelin\\contracts\\utils\\Context.sol": {
-      "lastModificationDate": 1648846812952,
+      "lastModificationDate": 1649184946952,
       "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
       "solcConfig": {
@@ -327,6 +348,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           }
         }
       },
@@ -339,7 +363,7 @@
       ]
     },
     "C:\\Users\\Shaun\\Desktop\\Unicadets\\Unicadets\\node_modules\\@openzeppelin\\contracts\\utils\\Strings.sol": {
-      "lastModificationDate": 1648846813195,
+      "lastModificationDate": 1649184949453,
       "contentHash": "9c54c6c065d9e590fdcdd72c451425b9",
       "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
       "solcConfig": {
@@ -362,6 +386,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           }
         }
       },
@@ -374,7 +401,7 @@
       ]
     },
     "C:\\Users\\Shaun\\Desktop\\Unicadets\\Unicadets\\node_modules\\@openzeppelin\\contracts\\utils\\introspection\\ERC165.sol": {
-      "lastModificationDate": 1648846812987,
+      "lastModificationDate": 1649184947626,
       "contentHash": "0e7db055ce108f9da7bb6686a00287c0",
       "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
       "solcConfig": {
@@ -397,6 +424,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           }
         }
       },
@@ -411,7 +441,7 @@
       ]
     },
     "C:\\Users\\Shaun\\Desktop\\Unicadets\\Unicadets\\node_modules\\@openzeppelin\\contracts\\utils\\introspection\\IERC165.sol": {
-      "lastModificationDate": 1648846813088,
+      "lastModificationDate": 1649184948653,
       "contentHash": "03e6768535ac4da0e9756f1d8a4a018a",
       "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
       "solcConfig": {
@@ -434,6 +464,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           }
         }
       },
@@ -446,7 +479,7 @@
       ]
     },
     "C:\\Users\\Shaun\\Desktop\\Unicadets\\Unicadets\\contracts\\IUnicadetsRenderer.sol": {
-      "lastModificationDate": 1648936738563,
+      "lastModificationDate": 1649185265054,
       "contentHash": "8b6127abe40eb9cfd3a01790bb1bdbe0",
       "sourceName": "contracts/IUnicadetsRenderer.sol",
       "solcConfig": {
@@ -469,6 +502,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           }
         }
       },
@@ -481,8 +517,8 @@
       ]
     },
     "C:\\Users\\Shaun\\Desktop\\Unicadets\\Unicadets\\contracts\\UnicadetsRenderer.sol": {
-      "lastModificationDate": 1648963590129,
-      "contentHash": "0c58823572dddb7c43d4a1030182a5fd",
+      "lastModificationDate": 1649185263547,
+      "contentHash": "69aef7452636b514264d4ed91d481d24",
       "sourceName": "contracts/UnicadetsRenderer.sol",
       "solcConfig": {
         "version": "0.8.5",
@@ -504,6 +540,9 @@
                 "ast"
               ]
             }
+          },
+          "metadata": {
+            "useLiteralContent": false
           }
         }
       },

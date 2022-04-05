@@ -10,7 +10,7 @@ require('dotenv');
 
 module.exports = {
   solidity: "0.8.5",
-  defaultNetwork: "localhost",
+  defaultNetwork: "hardhat",
   gasReporter: {
     currency: 'USD',
     gasPrice: 40
