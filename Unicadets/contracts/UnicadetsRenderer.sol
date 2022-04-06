@@ -71,6 +71,17 @@ contract UnicadetsRenderer {
         }
   
     }
+/*
+    // THIS WORKS YAY
+    function pleempy () public pure returns (string memory) {
+        string memory heads_str = "\u235D\u0CA0\u0C20\u25D4\u262F\u30C4\u2632\u25C9\u2CEC\u2230\u2655\u25D3\u2743\u2B56\u2CDC\u2739\u2633\u2368\u2C52\u268D\u2E3F\u272A\u2AA3\u222C";
+        uint hash = uint(keccak256(bytes(abi.encodePacked("blormp"))));
+        uint _randIndex = hash % 25;
+        uint start = _randIndex * 3;
+        uint end = (_randIndex + 1) * 3;
+        return substring(heads_str, start, end);
+    }
+*/
 
 
     function _weapon(uint rand, bool inUnicode) internal pure returns (string memory) {
