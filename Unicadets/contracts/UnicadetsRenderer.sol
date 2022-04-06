@@ -28,28 +28,12 @@ contract UnicadetsRenderer {
             return (uint16(((_seed % 2) + (_maxIndex - 2) + 1)) , "Mythic");
     }
 
-    function toString(uint256 value) internal pure returns (string memory) {
-        if (value == 0) {
-            return "0";
-        }
-        uint256 temp = value;
-        uint256 digits;
-        while (temp != 0) {
-            digits++;
-            temp /= 10;
-        }
-        bytes memory buffer = new bytes(digits);
-        while (value != 0) {
-            digits -= 1;
-            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
-            value /= 10;
-        }
-        return string(buffer);
-    }
 
     function _legs(uint256 rand, bool inUnicode) internal pure returns (string memory) {
 
         // ⦣⦣ ιι ›› ⅬⅬ ⲧⲧ ❬❬ ⸝⸝ ❠❠ ⱹⱹ ⱼⱼ ⸥⸥ ⌋⌋ ⧼⧼ ❭❭ ↯↯ ₍₍ ii ,, vv ❱❱ ɺɺ ʁʁ 
+        uint16 _index;
+        (_index, ) = _randomRarity(rand, LEG_COUNT);
         if (inUnicode == false) {
                 uint16[LEG_COUNT] memory legs = [10659, 953, 8250, 8556, 
                             11431, 10092, 11805, 
@@ -57,7 +41,7 @@ contract UnicadetsRenderer {
                     11813, 8971, 10748, 
                 10093, 8623, 8333, 
             105, 44, 118, 10097, 634, 641]; 
-            return toString(legs[rand % LEG_COUNT]);
+            return toString(legs[_index]);
         } else {
             string[LEG_COUNT] memory legs_str = [
                 unicode"⦣⦣",
@@ -83,7 +67,7 @@ contract UnicadetsRenderer {
                 unicode"ɺɺ",
                 unicode"ʁʁ"
             ];
-            return legs_str[rand % LEG_COUNT];
+            return legs_str[_index];
         }
   
     }
@@ -254,14 +238,18 @@ contract UnicadetsRenderer {
     function _top(uint256 rand, bool inUnicode) internal pure returns (string memory) {
 
         // 〇 ⍝ ಠ ఠ ◔ ☯ ツ ☲ ◉ ⳬ ∰ ♕ ◓ ❃ ⭖ Ⳝ ✹ ☳ ⍨ ⱒ ⚍ ⸿ ✪ ⪣ ∬
+        uint16 _index;
+        (_index,) = _randomRarity(rand, HEAD_COUNT);
         if (inUnicode == false) {
             uint16[HEAD_COUNT] memory heads = [12295, 9053, 3232, 3104, 9684, 9775,
                                     12484, 9778, 9673, 11500, 8752, 9813,
                                 9683, 10051, 11094, 11484, 10041, 9779,
                             9064, 11346, 9869, 11839, 10026, 10915,
                         8748];
-            return toString(heads[rand % HEAD_COUNT]);
+            return toString(heads[_index]);
         } else {
+            //string memory heads_str = "\u3007\u235D\u0CA0\u0C20\u25D4\u262F\u30C4\u2632\u25C9\u2CEC\u2230\u2655\u25D3\u2743\u2B56\u2CDC\u2739\u2633\u2368\u2C52\u268D\u2E3F\u272A\u2AA3\u222C";
+            
             string[HEAD_COUNT] memory heads_str = [
                 unicode"〇",
                 unicode"⍝",
@@ -289,7 +277,8 @@ contract UnicadetsRenderer {
                 unicode"⪣",
                 unicode"∬"
             ];
-            return heads_str[rand % HEAD_COUNT];
+            
+            return heads_str[_index];
         }
     }
 
@@ -367,6 +356,39 @@ contract UnicadetsRenderer {
         return result;
     }
 
+    function toString(uint256 value) internal pure returns (string memory) {
+        if (value == 0) {
+            return "0";
+        }
+        uint256 temp = value;
+        uint256 digits;
+        while (temp != 0) {
+            digits++;
+            temp /= 10;
+        }
+        bytes memory buffer = new bytes(digits);
+        while (value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
+            value /= 10;
+        }
+        return string(buffer);
+    }
+
+
+    function substring(
+        string memory str,
+        uint256 startIndex,
+        uint256 endIndex
+    ) internal pure returns (string memory) {
+        bytes memory strBytes = bytes(str);
+        bytes memory result = new bytes(endIndex - startIndex);
+        for (uint256 i = startIndex; i < endIndex; i++) {
+            result[i - startIndex] = strBytes[i];
+        }
+        return string(result);
+    }
+
     function _renderSVG(uint256 seed) public pure returns(string memory) {
 
         string memory top = _top(seed, false);
@@ -410,3 +432,5 @@ contract UnicadetsRenderer {
     }
     
 }
+
+
