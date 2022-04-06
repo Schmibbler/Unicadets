@@ -4,8 +4,8 @@ myproject
 /node_modules
 /.idea
 /svgs/*.svg
-./encoded_svgs/*.txt
-./decoded_svgs/*.svg
+/encoded_svgs/*.txt
+/decoded_svgs/*.svg
 *.tsbuildinfo
 .env
 

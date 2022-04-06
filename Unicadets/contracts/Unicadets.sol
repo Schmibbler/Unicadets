@@ -5,59 +5,77 @@ import "erc721a/contracts/ERC721A.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IUnicadetsRenderer.sol";
 
+/*  @author: nonce-enz
+*
+*   Unicadets is a project fully
+*   encoded on the blockchain,
+*   requiring zero 3rd parties to function
+*/
 contract Unicadets is ERC721A, Ownable {
 
     address public UnicadetsRenderer;
 
+    /*
+    * @dev declares mappings for seed generation
+    */
     mapping(uint256 => uint256) public tokenIdToSeed;
     mapping(uint256 => bool) internal seedToMinted;
+
+    /*
+    * @dev declares public minting variables
+    */
     uint32 public constant MAX_MINT_PER = 5;
-    uint64 public MAX_SUPPLY = 5000;
+    uint64 public MAX_SUPPLY = 5555;
+    uint256 MINT_PRICE = .1 ether;
     bool public DEVS_HAVE_MINTED = false;
 
     constructor() ERC721A("Unicadets", "UNCDT") {}
 
+    /*
+    *   @dev sets the contract that handles rendering logic
+    */
     function setRendererContract(address RenderContractAddress) public onlyOwner {
         UnicadetsRenderer = RenderContractAddress;
     }
-    function setMaxSupply(uint32 _supply) public onlyOwner {
-        MAX_SUPPLY = _supply;
-    }
 
-    function _currentPrice(uint256 current_supply, uint64 max) internal pure returns (uint256) {
-        if (current_supply <= 500)
+    function getBatchPrice(uint256 quantity) public view returns (uint256) {
+        if (totalSupply() <= 555)
             return 0 ether;
-        else if (current_supply > 500 && current_supply <= max)
-            return .1 ether;
         else
-            return .1 ether;
+            return quantity * MINT_PRICE;
     }
 
-    function _batchPrice(uint256 quantity, uint256 current_supply, uint64 max) internal pure returns (uint256) {
-        uint batch_price = 0 ether;
-        for (uint i = 0; i < quantity; i++)
-            batch_price += _currentPrice(current_supply + i, max);
-        return batch_price;
-    }
-
-    function getBatchPrice(uint256 quantityOfTokensToMint) public view returns (uint256) {
-            return _batchPrice(quantityOfTokensToMint, totalSupply(), MAX_SUPPLY);
-    }
-
-    function mint (uint256 quantity) payable public {
+    /*
+    * @dev mints >= 1 cadets to msg.sender, after updating state
+    */
+    function mintCadet (uint256 quantity) payable public {
+        /*
+        * @dev avoids excessive gas-expensive SLOAD opcode 
+        *      by doing 1 state read each vs > 1
+        */
         uint256 supply = totalSupply();
-        uint64 max = MAX_SUPPLY;
+        uint256 max = MAX_SUPPLY;
+        uint256 mint_price = MINT_PRICE;
+
+        uint256 batch_price;
+        if (supply <= 555)
+            batch_price = 0 ether;
+        else
+            batch_price = mint_price * quantity;
+
         require(msg.sender == tx.origin, "No minting from contracts!");
         require(quantity <= MAX_MINT_PER, "Exceeding max mints per transaction!");
-        require(supply <= max, "Max supply reached!");
         require(supply + quantity <= max, "Not enough left to mint");
-        require(msg.value >= _batchPrice(quantity, supply, max), "Not enough money provided!");
+        require(msg.value >= batch_price, "Not enough money provided!");
         _internalMint(supply, quantity);
         _safeMint(msg.sender, quantity);
     }
 
+    /*
+    * @dev mints to Unicadets developer team
+    */
     function devTeamMint (uint256 quantity) public onlyOwner {
-        require(quantity <= 30, "Don't be greedy!");
+        require(quantity <= 55, "Don't be greedy!");
         require(DEVS_HAVE_MINTED == false, "Developer team has already minted!");
         _internalMint(totalSupply(), quantity);
         _safeMint(msg.sender, quantity);
@@ -77,6 +95,11 @@ contract Unicadets is ERC721A, Ownable {
         _internalMint(current_token + 1, remaining - 1);      
     }
 
+    /*
+    * @dev recursively calls itself until a unique seed is generated per mint.
+    *      Theoretically this should only call once, but is implemented
+    *      regardless
+    */
     function _seedGen(uint256 timestamp, uint256 difficulty, uint256 index, uint256 gas) internal view returns (uint) {
         uint256 seed = uint256(
                         keccak256(

@@ -3,16 +3,29 @@ pragma solidity >=0.7.0 <0.9.0;
 
 contract UnicadetsRenderer {
 
-    uint256 private constant ARM_COUNT = 9;
-    uint256 private constant WEAPON_COUNT = 12;
-    uint256 private constant TORSO_COUNT = 11;
-    uint256 private constant LEG_COUNT = 22;
-    uint256 private constant HEAD_COUNT = 25;
+    uint16 private constant ARM_COUNT = 9;
+    uint16 private constant WEAPON_COUNT = 12;
+    uint16 private constant TORSO_COUNT = 11;
+    uint16 private constant LEG_COUNT = 22;
+    uint16 private constant HEAD_COUNT = 25;
 
     function tokenURI(uint256 _seed) external pure returns (string memory) {
         string memory svg = _renderSVG(_seed);
         svg = _svgToImageURI(svg);
         return _imageURItoTokenURI(svg, _seed);
+    }
+
+    function _randomRarity(uint256 _seed, uint256 _maxIndex) internal pure returns (uint16 _index, string memory _rarityType) {
+        uint256 rand_in_range = _seed % 10000;
+        _maxIndex -= 1;
+        if (rand_in_range >= 0 && rand_in_range <= 8500)
+            return (uint16(_seed % (_maxIndex - 6)), "Common");
+        else if (rand_in_range > 8500 && rand_in_range <= 9500)
+            return (uint16(((_seed % 2) + (_maxIndex - 6) + 1)), "Uncommon");
+        else if (rand_in_range > 9500 && rand_in_range <= 9900)
+            return (uint16(((_seed % 2) + (_maxIndex - 4) + 1)),"Rare");
+        else if (rand_in_range > 9900)
+            return (uint16(((_seed % 2) + (_maxIndex - 2) + 1)) , "Mythic");
     }
 
     function toString(uint256 value) internal pure returns (string memory) {
@@ -78,13 +91,15 @@ contract UnicadetsRenderer {
 
     function _weapon(uint rand, bool inUnicode) internal pure returns (string memory) {
         // Ⳕ ﴽ ⟆ ℥ ⨛ ⌈ ⼬ ⚸ Ⲋ ⨙ ⨔ ⍤
+        uint16 _index;
+        (_index, ) = _randomRarity(rand, WEAPON_COUNT);
         if (inUnicode == false) {
             uint16[WEAPON_COUNT] memory weapons = [
                 11476, 64829, 10182, 8485, 10779,
                 8968, 12076, 9912, 11402, 10777,
                 10772, 9060
             ];
-            return toString(weapons[rand % WEAPON_COUNT]);
+            return toString(weapons[_index]);
         } else {
             string[WEAPON_COUNT] memory weapons_str = [
                 unicode"Ⳕ",
@@ -100,19 +115,21 @@ contract UnicadetsRenderer {
                 unicode"⨔",
                 unicode"⍤"
             ];
-            return weapons_str[rand % WEAPON_COUNT];
+            return weapons_str[_index];
         }
     }
     
 
     function _body(uint256 rand, bool inUnicode) internal pure returns (string memory) {
  
+        uint16 _index;
+        (_index, ) = _randomRarity(rand, TORSO_COUNT);
         // ◳ ⛻ ⬯ ≋ ⼞ ⛫ ℿ ▤ ▧ ⾻ ⻩
         if (inUnicode == false) {
             uint16[TORSO_COUNT] memory torsos = [9715, 9979, 11055,
                                             8779, 12062, 9963,
                                         8511, 9636, 9639, 12219, 12009];
-            return toString(torsos[rand % TORSO_COUNT]);
+            return toString(torsos[_index]);
         } else {
             string[TORSO_COUNT] memory torsos_str = [
                 unicode"◳", 
@@ -127,28 +144,28 @@ contract UnicadetsRenderer {
                 unicode"⾻",
                 unicode"⻩"
             ];
-            return torsos_str[rand % TORSO_COUNT];
+            return torsos_str[_index];
         }       
     }
 
     function _arms(uint256 rand, bool inUnicode) internal pure returns (string memory, string memory) {
-
-        // ~ - ⌐ ↼ ⹀ ∼ ⤚ = ↜
-        // ~ - ¬ ⇀ ⹀ ∼ ⤙ = ↝
+        uint16 _index;
+        (_index, ) = _randomRarity(rand, ARM_COUNT);
+        // ~ - ⌐ ↼ ⹀ ∼ = ⤚ ↜
+        // ~ - ¬ ⇀ ⹀ ∼ = ⤙ ↝
         if (inUnicode == false) {
             uint16[ARM_COUNT] memory left_arms = [126, 45, 8976, 
                                             8636,  11840,
-                                    8764, 10522, 61, 8604];
+                                    8764, 61, 10522, 8604];
                                     
         
             uint16[ARM_COUNT] memory right_arms = [126, 45, 172, 
                                     8640, 11840,
-                                8764, 10521, 61, 8605];
+                                8764, 61, 10521, 8605];
 
-            uint8 arm_pair = uint8(rand % ARM_COUNT);
-            return (toString(left_arms[arm_pair]), toString(right_arms[arm_pair]));
+            
+            return (toString(left_arms[_index]), toString(right_arms[_index]));
         } else {
-            uint8 arm_pair = uint8(rand % ARM_COUNT);
             string[ARM_COUNT] memory left_arms_str = [
                 unicode"~",
                 unicode"-",
@@ -171,7 +188,7 @@ contract UnicadetsRenderer {
                 unicode"=",
                 unicode"↝"
             ];
-            string memory arms_str = string(abi.encodePacked(left_arms_str[arm_pair], right_arms_str[arm_pair]));
+            string memory arms_str = string(abi.encodePacked(left_arms_str[_index], right_arms_str[_index]));
             return (arms_str, "");
         }
 
@@ -204,15 +221,34 @@ contract UnicadetsRenderer {
                     );        
     }
 
-    function getAttributes(uint256 rand) internal pure returns (string memory) {
-        string memory top = _top(rand, true);
-        string memory arms;
-        (arms, ) = _arms(rand, true);
-        string memory torso = _body(rand, true);
-        string memory weapon = _weapon(rand, true);
-        string memory legs = _legs(rand, true);
+    function _reseed(uint256 _rand, uint256 _index) internal pure returns (uint256) {
+        return uint256(keccak256(abi.encodePacked(_rand, _index)));
+    }
 
-        return string(abi.encodePacked('"attributes":[{"trait_type":"Helmet","value":"', top,'"},{"trait_type":"Chestplate", "value":"', torso,'"},{"trait_type":"Gauntlets","value":"', arms,'"},{"trait_type":"Weapon","value":"', weapon,'"},{"trait_type":"Leggings","value":"', legs,'"}]'));
+    function getAttributes(uint256 _rand) internal pure returns (string memory) {
+        uint256[5] memory reseededRand; 
+        for (uint256 i = 0; i < 5; ++i) 
+            reseededRand[i] = _reseed(_rand, i);
+        string memory top = _top(reseededRand[0], true);
+        string memory arms;
+        (arms, ) = _arms(reseededRand[1], true);
+        string memory torso = _body(reseededRand[2], true);
+        string memory weapon = _weapon(reseededRand[3], true);
+        string memory legs = _legs(reseededRand[4], true);
+
+        // Rarity strings
+        string memory top_rarity;
+        ( ,top_rarity) = _randomRarity(reseededRand[0], HEAD_COUNT);
+        string memory arms_rarity;
+        ( ,arms_rarity) = _randomRarity(reseededRand[1], ARM_COUNT);
+        string memory torso_rarity;
+        ( ,torso_rarity) = _randomRarity(reseededRand[2], TORSO_COUNT);
+        string memory weapon_rarity;
+        ( ,weapon_rarity) = _randomRarity(reseededRand[3], WEAPON_COUNT);
+        string memory legs_rarity;
+        ( ,legs_rarity) = _randomRarity(reseededRand[4], LEG_COUNT);
+
+        return string(abi.encodePacked('"attributes":[{"trait_type":"Helmet","value":"', top_rarity, ' ', top,'"},{"trait_type":"Chestplate", "value":"', torso_rarity, ' ', torso, '"},{"trait_type":"Gauntlets","value":"', arms_rarity, ' ', arms,'"},{"trait_type":"Weapon","value":"', weapon_rarity, ' ', weapon,'"},{"trait_type":"Leggings","value":"', legs_rarity, ' ', legs,'"}]'));
     }
 
     function _top(uint256 rand, bool inUnicode) internal pure returns (string memory) {
