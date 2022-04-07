@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\Shaun\\Desktop\\Unicadets\\Unicadets\\contracts\\Unicadets.sol": {
-      "lastModificationDate": 1649185264446,
-      "contentHash": "28a3e0765e72a86eb47f8c48f178b095",
+      "lastModificationDate": 1649274122231,
+      "contentHash": "cf9b48f83f53077502032ffba0d996d5",
       "sourceName": "contracts/Unicadets.sol",
       "solcConfig": {
         "version": "0.8.5",
@@ -25,9 +25,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -106,9 +103,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -152,9 +146,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -192,9 +183,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -232,9 +220,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -270,9 +255,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -310,9 +292,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -348,9 +327,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -386,9 +362,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -424,9 +397,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -464,9 +434,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -502,9 +469,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
@@ -517,8 +481,8 @@
       ]
     },
     "C:\\Users\\Shaun\\Desktop\\Unicadets\\Unicadets\\contracts\\UnicadetsRenderer.sol": {
-      "lastModificationDate": 1649185263547,
-      "contentHash": "69aef7452636b514264d4ed91d481d24",
+      "lastModificationDate": 1649352878598,
+      "contentHash": "4aea10ff99cba0d295e1b6b475390819",
       "sourceName": "contracts/UnicadetsRenderer.sol",
       "solcConfig": {
         "version": "0.8.5",
@@ -540,9 +504,6 @@
                 "ast"
               ]
             }
-          },
-          "metadata": {
-            "useLiteralContent": false
           }
         }
       },
