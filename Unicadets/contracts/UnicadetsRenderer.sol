@@ -248,6 +248,7 @@ contract UnicadetsRenderer {
                         8748];
             return toString(heads[_index]);
         } else {
+            // Put hex escape characters in js metadata object "\uNNNN" and use the same hex characters to encode in svg &#xNNNN;
             //string memory heads_str = "\u3007\u235D\u0CA0\u0C20\u25D4\u262F\u30C4\u2632\u25C9\u2CEC\u2230\u2655\u25D3\u2743\u2B56\u2CDC\u2739\u2633\u2368\u2C52\u268D\u2E3F\u272A\u2AA3\u222C";
             
             string[HEAD_COUNT] memory heads_str = [
