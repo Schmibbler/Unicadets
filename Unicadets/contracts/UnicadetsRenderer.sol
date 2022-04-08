@@ -25,7 +25,6 @@ contract UnicadetsRenderer {
                         ))
                   )); 
     }
-
     function _randomRarity(uint256 _seed, uint256 _maxIndex) internal pure returns (uint16 _index, string memory _rarityType) {
         uint256 rand_in_range = _seed % 10000;
         _maxIndex -= 1;
@@ -38,8 +37,6 @@ contract UnicadetsRenderer {
         else if (rand_in_range > 9900)
             return (uint16(((_seed % 2) + (_maxIndex - 2) + 1)) , "Mythic");
     }
-
-
     function _legs(uint256 rand) internal pure returns (uint16) {
         // ⦣⦣ ιι ›› ⅬⅬ ⲧⲧ ❬❬ ⸝⸝ ❠❠ ⱹⱹ ⱼⱼ ⸥⸥ ⌋⌋ ⧼⧼ ❭❭ ↯↯ ₍₍ ii ,, vv ❱❱ ɺɺ ʁʁ 
         uint16 _index;
@@ -53,7 +50,6 @@ contract UnicadetsRenderer {
         105, 44, 118, 10097, 634, 641]; 
         return legs[_index];  
     }
-
     function _weapon(uint rand) internal pure returns (uint16) {
         // Ⳕ ﴽ ⟆ ℥ ⨛ ⌈ ⼬ ⚸ Ⲋ ⨙ ⨔ ⍤
         uint16 _index;
@@ -65,7 +61,6 @@ contract UnicadetsRenderer {
         ];
         return weapons[_index];
     }
-
     function _top(uint256 rand) internal pure returns (uint16) {
         // 〇 ⍝ ಠ ఠ ◔ ☯ ツ ☲ ◉ ⳬ ∰ ♕ ◓ ❃ ⭖ Ⳝ ✹ ☳ ⍨ ⱒ ⚍ ⸿ ✪ ⪣ ∬
         uint16 _index;
@@ -77,8 +72,6 @@ contract UnicadetsRenderer {
                     8748];
         return heads[_index];
     }
-    
-
     function _body(uint256 rand) internal pure returns (uint16) {
         uint16 _index;
         (_index, ) = _randomRarity(rand, TORSO_COUNT);
@@ -88,7 +81,6 @@ contract UnicadetsRenderer {
                                     8511, 9636, 9639, 12219, 12009];
         return torsos[_index];
     }
-
     function _arms(uint256 rand) internal pure returns (uint16, uint16) {
         uint16 _index;
         (_index, ) = _randomRarity(rand, ARM_COUNT);
@@ -102,7 +94,6 @@ contract UnicadetsRenderer {
                             8764, 61, 10521, 8605];
         return (left_arms[_index], right_arms[_index]);
     }
-
     function _generateArmor (uint256 rand) internal pure returns (uint16[6] memory) {
         // First 2 indices are arms. Last index is leg
         uint[5] memory _randArray;
@@ -117,7 +108,6 @@ contract UnicadetsRenderer {
         armor[5] = _legs(_randArray[4]);
         return armor;
     }
-
     function getAttributes(uint256 _rand) internal pure returns (string memory) {
 
         uint16[5] memory num_attributes = [HEAD_COUNT, TORSO_COUNT, ARM_COUNT, WEAPON_COUNT, LEG_COUNT];
@@ -131,7 +121,6 @@ contract UnicadetsRenderer {
         }
         return string(abi.encodePacked('"attributes":[{"trait_type":"Helmet","value":"', _rarityArray[0], '"},{"trait_type":"Chestplate", "value":"', _rarityArray[1], '"},{"trait_type":"Gauntlets","value":"', _rarityArray[2],'"},{"trait_type":"Weapon","value":"', _rarityArray[3], '"},{"trait_type":"Leggings","value":"', _rarityArray[4],'"}]'));
     }
-
     function _encode(bytes memory data) internal pure returns (string memory) {
         string memory TABLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         if (data.length == 0) return "";
@@ -205,7 +194,6 @@ contract UnicadetsRenderer {
 
         return result;
     }
-
     function toString(uint256 value) internal pure returns (string memory) {
         if (value == 0) {
             return "0";
@@ -224,7 +212,6 @@ contract UnicadetsRenderer {
         }
         return string(buffer);
     }
-
     function substring(
         string memory str,
         uint256 startIndex,
@@ -237,7 +224,6 @@ contract UnicadetsRenderer {
         }
         return string(result);
     }
-
     function _renderSVG(uint256 seed) public pure returns(string memory) {
 
         uint16[6] memory armor_ints;
@@ -252,22 +238,22 @@ contract UnicadetsRenderer {
         string memory weapon_x;
         if (weapon_on_right == 1) {
             weapon_x = '75%';
-            left_pos = 'x="85" y="128" transform="rotate(-45, 100, 145)"';
-            right_pos = 'x="60%" y="60%" transform="rotate(15, 240, 200)"';
+            left_pos = 'x="85" y="128" transform="rotate(-45, 310, 110)"';
+            right_pos = 'x="60%" y="60%" transform="rotate(15, 480, 450)"';
         } else {
             weapon_x = '15%';
-            left_pos = 'x="148" y="128" transform="rotate(-15, 140, 400)"';
-            right_pos = 'x="172" y="128" transform="rotate(45, 158, 128)"';            
+            left_pos = 'x="148" y="128" transform="rotate(-15, 700, 160)"';
+            right_pos = 'x="172" y="128" transform="rotate(45, 60, 420)"';            
         }
 
         return string(abi.encodePacked(
-                    '<svg width="256px" height="256px"  xmlns="http://www.w3.org/2000/svg">',
-                    string(abi.encodePacked('<text x="38%" y="33%" font-size="50px">&#', armor_str[2], ';</text>')),
-                    string(abi.encodePacked('<text ', left_pos,' font-size="60px" text-anchor="middle" dominant-baseline="central">&#', armor_str[0], ';</text>')),
-                    string(abi.encodePacked('<text x="38%" y="60%" font-size="60px">&#', armor_str[3], ';</text>')),
-                    string(abi.encodePacked('<text ', right_pos,' font-size="60px" text-anchor="middle" dominant-baseline="central">&#', armor_str[1], ';</text>')),
-                    string(abi.encodePacked('<text x="', weapon_x,'" y="60%" font-size="60px">&#', armor_str[4], ';</text>')),
-                    string(abi.encodePacked('<text x="40%" y="80%" font-size="50px">&#', armor_str[5], ';</text>','<text x="52%" y="80%" font-size="50px">&#', armor_str[5], ';</text></svg>'))
+                    '<svg width="512px" height="512px"  xmlns="http://www.w3.org/2000/svg">',
+                    string(abi.encodePacked('<text x="38%" y="33%" font-size="100px">&#', armor_str[2], ';</text>')),
+                    string(abi.encodePacked('<text ', left_pos,' font-size="120px" text-anchor="middle" dominant-baseline="central">&#', armor_str[0], ';</text>')),
+                    string(abi.encodePacked('<text x="38%" y="60%" font-size="120px">&#', armor_str[3], ';</text>')),
+                    string(abi.encodePacked('<text ', right_pos,' font-size="120px" text-anchor="middle" dominant-baseline="central">&#', armor_str[1], ';</text>')),
+                    string(abi.encodePacked('<text x="', weapon_x,'" y="60%" font-size="120px">&#', armor_str[4], ';</text>')),
+                    string(abi.encodePacked('<text x="40%" y="80%" font-size="100px">&#', armor_str[5], ';</text>','<text x="52%" y="80%" font-size="100px">&#', armor_str[5], ';</text></svg>'))
             ));
     } 
 }

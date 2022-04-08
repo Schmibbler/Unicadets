@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity >=0.7.0 <0.9.0;
 import "erc721a/contracts/ERC721A.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IUnicadetsRenderer.sol";
 
 /*  @author: nonce-enz
-*
-*   Unicadets is a project fully
-*   encoded on the blockchain,
+*  
+*   Unicadets is fully encoded
+*   on the blockchain,
 *   requiring zero 3rd parties to function
 */
 contract Unicadets is ERC721A, Ownable {
@@ -20,6 +19,7 @@ contract Unicadets is ERC721A, Ownable {
     */
     mapping(uint256 => uint256) public tokenIdToSeed;
     mapping(uint256 => bool) internal seedToMinted;
+    mapping(uint256 => uint8) public tokenIdToRerolls;
 
     /*
     * @dev declares public minting variables
@@ -93,6 +93,19 @@ contract Unicadets is ERC721A, Ownable {
         seedToMinted[seed] = true;
         tokenIdToSeed[current_token] = seed;
         _internalMint(current_token + 1, remaining - 1);      
+    }
+
+    function reroll (uint256 tokenID) payable public {
+        require(msg.value >= .01 ether, "Not enough ETH to reroll!");
+        require(ownerOf(tokenID) == msg.sender, "Not your cadet to reroll!");
+        require(tokenIdToRerolls[tokenID] <= 3, "Max rerolls reached!");
+        tokenIdToRerolls[tokenID] += 1;
+        tokenIdToSeed[tokenID] =_seedGen(
+                                        block.timestamp,
+                                        block.difficulty,
+                                        tokenID,
+                                        gasleft()
+                                );
     }
 
     /*

@@ -13,8 +13,7 @@ module.exports = {
   solidity: "0.8.5",
   defaultNetwork: "hardhat",
   gasReporter: {
-    currency: 'USD',
-    gasPrice: 40
+    enabled: true
   },
   networks: {
     hardhat: {},
